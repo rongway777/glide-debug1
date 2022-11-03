@@ -45,7 +45,7 @@ import java.util.Set;
  * BitmapFactory}.
  */
 public final class Downsampler {
-  static final String TAG = "Downsampler";
+  static final String TAG = "Glide-Test";
 
   /**
    * Indicates the {@link com.bumptech.glide.load.DecodeFormat} that will be used in conjunction
@@ -485,8 +485,17 @@ public final class Downsampler {
       return;
     }
 
+    Log.i(TAG, "Line ==> calculateScaling()");
+
+    /**
+     * 图片原始宽高
+     */
     int orientedSourceWidth = sourceWidth;
     int orientedSourceHeight = sourceHeight;
+
+    Log.i(TAG, "Line ==> orientWidth = " + sourceWidth + ", originHeight = " + sourceHeight);
+    Log.i(TAG, "Line ==> targetWidth = " + targetWidth + ", targetHeight = " + targetHeight);
+
     // If we're rotating the image +-90 degrees, we need to downsample accordingly so the image
     // width is decreased to near our target's height and the image height is decreased to near
     // our target width.
@@ -496,9 +505,16 @@ public final class Downsampler {
       orientedSourceHeight = sourceWidth;
     }
 
+    /**
+     * 倍数
+     * exactScaleFactor： 缩放因子(float)
+     *    FIT_CENTER : min(widthMultiple, heightMultiple)
+     */
     final float exactScaleFactor =
         downsampleStrategy.getScaleFactor(
             orientedSourceWidth, orientedSourceHeight, targetWidth, targetHeight);
+
+    Log.i(TAG, "exactScaleFactor(float) = " + exactScaleFactor);
 
     if (exactScaleFactor <= 0f) {
       throw new IllegalArgumentException(
@@ -518,6 +534,9 @@ public final class Downsampler {
               + "]");
     }
 
+    /**
+     *  QUALITY / MEMORY
+     */
     SampleSizeRounding rounding =
         downsampleStrategy.getSampleSizeRounding(
             orientedSourceWidth, orientedSourceHeight, targetWidth, targetHeight);
@@ -525,11 +544,25 @@ public final class Downsampler {
       throw new IllegalArgumentException("Cannot round with null rounding");
     }
 
+    Log.i(TAG, "rounding = " + rounding);
+
+    /**
+     *  exactScaleFactor:   之前计算的缩放比(float)
+     *  outWidth/outHeight: 按照缩放比缩放后的宽高(四舍五入到int)
+     */
     int outWidth = round(exactScaleFactor * orientedSourceWidth);
     int outHeight = round(exactScaleFactor * orientedSourceHeight);
 
+    Log.i(TAG, "Line ==> outWidth(int) = " + outWidth + ", outHeight(int) = " + outHeight);
+
+    /**
+     * 整形缩放因子
+     */
     int widthScaleFactor = orientedSourceWidth / outWidth;
     int heightScaleFactor = orientedSourceHeight / outHeight;
+
+    Log.i(TAG, "Line ==> widthScaleFactor = " + widthScaleFactor + ", heightScaledFactor = " + heightScaleFactor);
+
 
     // TODO: This isn't really right for both CenterOutside and CenterInside. Consider allowing
     // DownsampleStrategy to pick, or trying to do something more sophisticated like picking the

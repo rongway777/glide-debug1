@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:$ANDROID_GRADLE_VERSION"
+        classpath "com.android.tools.build:gradle:7.2.1"
         if (!hasProperty('DISABLE_ERROR_PRONE')) {
             classpath "net.ltgt.gradle:gradle-errorprone-plugin:$ERROR_PRONE_PLUGIN_VERSION"
         }

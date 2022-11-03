@@ -36,3 +36,4 @@ include ':testutil'
 include ':mocks'
 
 rootProject.name = 'glide-parent'
+include ':test'
