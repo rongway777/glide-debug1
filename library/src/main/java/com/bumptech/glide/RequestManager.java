@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import androidx.annotation.CheckResult;
 import androidx.annotation.DrawableRes;
@@ -66,7 +67,7 @@ public class RequestManager
 
   @SuppressWarnings("WeakerAccess")
   @Synthetic
-  final Lifecycle lifecycle;
+  public final Lifecycle lifecycle;
 
   @GuardedBy("this")
   private final RequestTracker requestTracker;
@@ -348,6 +349,7 @@ public class RequestManager
   public synchronized void onStart() {
     resumeRequests();
     targetTracker.onStart();
+    Log.i("Glide-Lifecycle", "Line ==> RequestManager onStart()");
   }
 
   /**
@@ -358,6 +360,7 @@ public class RequestManager
   public synchronized void onStop() {
     pauseRequests();
     targetTracker.onStop();
+    Log.i("Glide-Lifecycle", "Line ==> RequestManager onStop()");
   }
 
   /**
@@ -376,6 +379,7 @@ public class RequestManager
     lifecycle.removeListener(connectivityMonitor);
     Util.removeCallbacksOnUiThread(addSelfToLifecycle);
     glide.unregisterRequestManager(this);
+    Log.i("Glide-Lifecycle", "Line ==> RequestManager onDestroy()");
   }
 
   /**

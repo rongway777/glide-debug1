@@ -522,6 +522,7 @@ public class RequestManagerRetriever implements Handler.Callback {
       // corresponding Lifecycle. It's safe to start the RequestManager, but starting the
       // Lifecycle might trigger memory leaks. See b/154405040
       if (isParentVisible) {
+        Log.i("Glide-Lifecycle", "Line ==> isParentVisible = true, call requestManager.onStart()");
         requestManager.onStart();
       }
       current.setRequestManager(requestManager);

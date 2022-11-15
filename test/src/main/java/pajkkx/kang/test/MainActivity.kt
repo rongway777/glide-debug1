@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import java.io.File
@@ -31,12 +32,30 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         requestReadExternalPermission()
         img = findViewById(R.id.imageView)
+        Log.i(TAG, "onCreate: ")
 
-        Log.i(TAG, "onCreate: IMG1 = $CHA_HUA_HEAD_IMG_1")
-        Glide.with(this)
-                .load(GOOGLE_PNG_IMG_6)
-                .into(img!!)
+        Log.i(TAG, "onCreate: IMG1 = $GOOGLE_PNG_IMG_6")
+        /*Glide.with(this)
+                .load(GOOGLE_PNG_IMG_5)
+                .into(img!!)*/
+
+        val requestManager = Glide.with(this)
+        requestManager.lifecycle.addListener(MyLifecycleListener())
+        img!!.visibility = View.INVISIBLE
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     private fun requestReadExternalPermission(){

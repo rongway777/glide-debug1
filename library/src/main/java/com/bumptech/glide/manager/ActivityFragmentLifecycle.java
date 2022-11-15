@@ -1,5 +1,6 @@
 package com.bumptech.glide.manager;
 
+import android.util.Log;
 import androidx.annotation.NonNull;
 import com.bumptech.glide.util.Util;
 import java.util.Collections;
@@ -29,6 +30,7 @@ class ActivityFragmentLifecycle implements Lifecycle {
    */
   @Override
   public void addListener(@NonNull LifecycleListener listener) {
+    Log.i("Glide-Lifecycle", "Line ==> ActivityFragmentLifecycle addListener - " + listener);
     lifecycleListeners.add(listener);
 
     if (isDestroyed) {
@@ -54,6 +56,7 @@ class ActivityFragmentLifecycle implements Lifecycle {
 
   void onStop() {
     isStarted = false;
+    Log.i("Glide-Lifecycle", "Line ==> lifecycs.size = " + lifecycleListeners.size());
     for (LifecycleListener lifecycleListener : Util.getSnapshot(lifecycleListeners)) {
       lifecycleListener.onStop();
     }

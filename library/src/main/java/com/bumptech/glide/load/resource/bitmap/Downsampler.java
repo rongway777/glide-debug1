@@ -487,14 +487,15 @@ public final class Downsampler {
 
     Log.i(TAG, "Line ==> calculateScaling()");
 
+
     /**
      * 图片原始宽高
      */
     int orientedSourceWidth = sourceWidth;
     int orientedSourceHeight = sourceHeight;
 
-    Log.i(TAG, "Line ==> orientWidth = " + sourceWidth + ", originHeight = " + sourceHeight);
-    Log.i(TAG, "Line ==> targetWidth = " + targetWidth + ", targetHeight = " + targetHeight);
+    Log.i(TAG, "Line ==> 原始宽 = " + sourceWidth + ", 原始高 = " + sourceHeight);
+    Log.i(TAG, "Line ==> 目标宽 = " + targetWidth + ", 目标高 = " + targetHeight);
 
     // If we're rotating the image +-90 degrees, we need to downsample accordingly so the image
     // width is decreased to near our target's height and the image height is decreased to near
@@ -561,12 +562,15 @@ public final class Downsampler {
     int widthScaleFactor = orientedSourceWidth / outWidth;
     int heightScaleFactor = orientedSourceHeight / outHeight;
 
-    Log.i(TAG, "Line ==> widthScaleFactor = " + widthScaleFactor + ", heightScaledFactor = " + heightScaleFactor);
+    Log.i(TAG, "widthScaleFactor(float) = " + widthScaleFactor + ", heightScaledFactor(float) = " + heightScaleFactor);
+    Log.i(TAG, "widthScaleFactor(int) = " + widthScaleFactor + ", heightScaledFactor(int) = " + heightScaleFactor);
 
 
     // TODO: This isn't really right for both CenterOutside and CenterInside. Consider allowing
     // DownsampleStrategy to pick, or trying to do something more sophisticated like picking the
     // scale factor that leads to an exact match.
+
+    //widthScaleFactor 和 heightScaleFactor 大概率是一致的
     int scaleFactor =
         rounding == SampleSizeRounding.MEMORY
             ? Math.max(widthScaleFactor, heightScaleFactor)
@@ -579,6 +583,9 @@ public final class Downsampler {
       powerOfTwoSampleSize = 1;
     } else {
       powerOfTwoSampleSize = Math.max(1, Integer.highestOneBit(scaleFactor));
+
+      Log.i(TAG, "powerOfTwoSampleSize = " + powerOfTwoSampleSize);
+
       if (rounding == SampleSizeRounding.MEMORY
           && powerOfTwoSampleSize < (1.f / exactScaleFactor)) {
         powerOfTwoSampleSize = powerOfTwoSampleSize << 1;
@@ -591,6 +598,9 @@ public final class Downsampler {
     // JPEG - Always uses ceiling
     // Webp - Prior to N, always uses floor. At and after N, always uses round.
     options.inSampleSize = powerOfTwoSampleSize;
+
+    Log.i(TAG, "options.inSampleSize = " + options.inSampleSize);
+
     int powerOfTwoWidth;
     int powerOfTwoHeight;
     if (imageType == ImageType.JPEG) {
@@ -632,9 +642,13 @@ public final class Downsampler {
       powerOfTwoHeight = orientedSourceHeight / powerOfTwoSampleSize;
     }
 
+
     double adjustedScaleFactor =
         downsampleStrategy.getScaleFactor(
             powerOfTwoWidth, powerOfTwoHeight, targetWidth, targetHeight);
+
+    Log.i(TAG, "采样后的图片尺寸, width = " + powerOfTwoWidth + ", height = " + powerOfTwoHeight +
+        ", adjustedScaledFactor = " + adjustedScaleFactor);
 
     // Density scaling is only supported if inBitmap is null prior to KitKat. Avoid setting
     // densities here so we calculate the final Bitmap size correctly.

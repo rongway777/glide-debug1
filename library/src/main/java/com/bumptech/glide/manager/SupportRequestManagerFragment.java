@@ -200,18 +200,21 @@ public class SupportRequestManagerFragment extends Fragment {
   @Override
   public void onStart() {
     super.onStart();
+    Log.i("Glide-Lifecycle", "Line ==> Fragment onStart()");
     lifecycle.onStart();
   }
 
   @Override
   public void onStop() {
     super.onStop();
+    Log.i("Glide-Lifecycle", "Line ==> Fragment onStop()");
     lifecycle.onStop();
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
+    Log.i("Glide-Lifecycle", "Line ==> Fragment onDestroy()");
     lifecycle.onDestroy();
     unregisterFragmentWithRoot();
   }
