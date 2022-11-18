@@ -2,6 +2,7 @@ package pajkkx.kang.test
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,9 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.target.ViewTarget
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -39,7 +43,15 @@ class MainActivity : AppCompatActivity() {
                 .load(GOOGLE_PNG_IMG_5)
                 .into(img!!)*/
 
-        val requestManager = Glide.with(this)
+
+
+        val requestManager: RequestManager = Glide.with(this)
+
+        val requestBuilder: RequestBuilder<Drawable> = requestManager.load(GOOGLE_PNG_IMG_4)
+
+
+        val viewTarget: ViewTarget<ImageView,Drawable> = requestBuilder.into(img!!)
+
         requestManager.lifecycle.addListener(MyLifecycleListener())
         img!!.visibility = View.INVISIBLE
     }

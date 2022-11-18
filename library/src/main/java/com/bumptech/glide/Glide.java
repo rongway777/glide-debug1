@@ -210,9 +210,13 @@ public class Glide implements ComponentCallbacks2 {
   @SuppressWarnings("deprecation")
   private static void initializeGlide(
       @NonNull Context context,
-      @NonNull GlideBuilder builder,
+      @NonNull GlideBuilder builder,  /* new GlideBuilder()*/
       @Nullable GeneratedAppGlideModule annotationGeneratedModule) {
+
+    //拿到全局应用的Application 避免内存泄露
     Context applicationContext = context.getApplicationContext();
+
+
     List<GlideModule> manifestModules = Collections.emptyList();
     if (annotationGeneratedModule == null || annotationGeneratedModule.isManifestParsingEnabled()) {
       manifestModules = new ManifestParser(applicationContext).parse();
@@ -240,19 +244,29 @@ public class Glide implements ComponentCallbacks2 {
       }
     }
 
+    //拿到一个RequestManagerFactory
     RequestManagerRetriever.RequestManagerFactory factory =
         annotationGeneratedModule != null
             ? annotationGeneratedModule.getRequestManagerFactory()
             : null;
+
+    //设置到GlideBuilder当中
     builder.setRequestManagerFactory(factory);
+
+    //下面应该都是对Builder的可配置操作.builder.setXXX()
     for (GlideModule module : manifestModules) {
       module.applyOptions(applicationContext, builder);
     }
     if (annotationGeneratedModule != null) {
       annotationGeneratedModule.applyOptions(applicationContext, builder);
     }
+
+    //生成builder
     Glide glide = builder.build(applicationContext, manifestModules, annotationGeneratedModule);
+
     applicationContext.registerComponentCallbacks(glide);
+
+    //单例实例化完成
     Glide.glide = glide;
   }
 

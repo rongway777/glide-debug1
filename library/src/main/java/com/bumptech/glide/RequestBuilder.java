@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.view.View;
 import android.widget.ImageView;
 import androidx.annotation.CheckResult;
 import androidx.annotation.DrawableRes;
@@ -56,6 +57,8 @@ import java.util.concurrent.Executor;
 public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBuilder<TranscodeType>>
     implements Cloneable, ModelTypes<RequestBuilder<TranscodeType>> {
   // Used in generated subclasses
+
+  //RequestBuilder 本身就是 RequestOptions
   protected static final RequestOptions DOWNLOAD_ONLY_OPTIONS =
       new RequestOptions()
           .diskCacheStrategy(DiskCacheStrategy.DATA)
@@ -794,9 +797,13 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
       throw new IllegalArgumentException("You must call #load() before calling #into()");
     }
 
+    //为http://xxx 生成一个Glide Request
     Request request = buildRequest(target, targetListener, options, callbackExecutor);
 
+    //多个Request想附着在一个Imageview上?
     Request previous = target.getRequest();
+
+    //TODO:::::
     if (request.isEquivalentTo(previous)
         && !isSkipMemoryCacheWithCompletePreviousRequest(options, previous)) {
       // If the request is completed, beginning again will ensure the result is re-delivered,
@@ -812,10 +819,16 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
       return target;
     }
 
+    //清除掉target
     requestManager.clear(target);
+
+    //每个target对应一个request
     target.setRequest(request);
+
+    //把target存起来,然后start request
     requestManager.track(target, request);
 
+    //target<Imageview,Drawable>
     return target;
   }
 
@@ -843,6 +856,8 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
   public ViewTarget<ImageView, TranscodeType> into(@NonNull ImageView view) {
     Util.assertMainThread();
     Preconditions.checkNotNull(view);
+
+    //根据Imageview的scaleType来重构RequestOptions
 
     BaseRequestOptions<?> requestOptions = this;
     if (!requestOptions.isTransformationSet()
@@ -873,10 +888,12 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
       }
     }
 
+    //core: new RequestOptions,
+    //Target是一个接口,实现了当Load成功之后要怎么做,Listener.....
     return into(
-        glideContext.buildImageViewTarget(view, transcodeClass),
+        glideContext.buildImageViewTarget(view, transcodeClass), //targetView <Drawable,Imageview>
         /*targetListener=*/ null,
-        requestOptions,
+        requestOptions,//新的RequestOptions
         Executors.mainThreadExecutor());
   }
 
@@ -1025,6 +1042,7 @@ public class RequestBuilder<TranscodeType> extends BaseRequestOptions<RequestBui
     }
   }
 
+  //构建一个Request
   private Request buildRequest(
       Target<TranscodeType> target,
       @Nullable RequestListener<TranscodeType> targetListener,

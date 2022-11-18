@@ -15,9 +15,9 @@ public class ImageViewTargetFactory {
   public <Z> ViewTarget<ImageView, Z> buildTarget(
       @NonNull ImageView view, @NonNull Class<Z> clazz) {
     if (Bitmap.class.equals(clazz)) {
-      return (ViewTarget<ImageView, Z>) new BitmapImageViewTarget(view);
+      return (ViewTarget<ImageView, Z>) new BitmapImageViewTarget(view); //调用asBitmap()会执行这里
     } else if (Drawable.class.isAssignableFrom(clazz)) {
-      return (ViewTarget<ImageView, Z>) new DrawableImageViewTarget(view);
+      return (ViewTarget<ImageView, Z>) new DrawableImageViewTarget(view);//重点关注here
     } else {
       throw new IllegalArgumentException(
           "Unhandled class: " + clazz + ", try .as*(Class).transcode(ResourceTranscoder)");

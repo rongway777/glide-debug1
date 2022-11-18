@@ -44,14 +44,24 @@ import java.util.Map;
 public final class GlideBuilder {
   private final Map<Class<?>, TransitionOptions<?, ?>> defaultTransitionOptions = new ArrayMap<>();
   private final GlideExperiments.Builder glideExperimentsBuilder = new GlideExperiments.Builder();
+
+  //管理线程池
   private Engine engine;
+
+  //
   private BitmapPool bitmapPool;
   private ArrayPool arrayPool;
   private MemoryCache memoryCache;
+
+  //线程池
   private GlideExecutor sourceExecutor;
   private GlideExecutor diskCacheExecutor;
+
+  //本地磁盘缓存
   private DiskCache.Factory diskCacheFactory;
+  //内存缓存
   private MemorySizeCalculator memorySizeCalculator;
+
   private ConnectivityMonitorFactory connectivityMonitorFactory;
   private int logLevel = Log.INFO;
   private RequestOptionsFactory defaultRequestOptionsFactory =
@@ -514,26 +524,33 @@ public final class GlideBuilder {
       @NonNull Context context,
       List<GlideModule> manifestModules,
       AppGlideModule annotationGeneratedGlideModule) {
+
+    //实例化一个网络请求的线程池
     if (sourceExecutor == null) {
       sourceExecutor = GlideExecutor.newSourceExecutor();
     }
 
+    //实例化一个本地磁盘缓存的线程池
     if (diskCacheExecutor == null) {
       diskCacheExecutor = GlideExecutor.newDiskCacheExecutor();
     }
 
+    //实例化一个加载动画线程池
     if (animationExecutor == null) {
       animationExecutor = GlideExecutor.newAnimationExecutor();
     }
 
+    //实例化一个对图片decode计算的线程池
     if (memorySizeCalculator == null) {
       memorySizeCalculator = new MemorySizeCalculator.Builder(context).build();
     }
 
+    //本身是个LifecycleListener, 和生命周期相关
     if (connectivityMonitorFactory == null) {
       connectivityMonitorFactory = new DefaultConnectivityMonitorFactory();
     }
 
+    //和bitmap_pool初始化有关系
     if (bitmapPool == null) {
       int size = memorySizeCalculator.getBitmapPoolSize();
       if (size > 0) {
@@ -547,10 +564,12 @@ public final class GlideBuilder {
       arrayPool = new LruArrayPool(memorySizeCalculator.getArrayPoolSizeInBytes());
     }
 
+    //TODO:资源内存缓存?
     if (memoryCache == null) {
       memoryCache = new LruResourceCache(memorySizeCalculator.getMemoryCacheSize());
     }
 
+    //磁盘缓存相关
     if (diskCacheFactory == null) {
       diskCacheFactory = new InternalCacheDiskCacheFactory(context);
     }
@@ -574,8 +593,11 @@ public final class GlideBuilder {
     }
 
     GlideExperiments experiments = glideExperimentsBuilder.build();
+
+    //RequestManagerRetriever 初始化
     RequestManagerRetriever requestManagerRetriever =
         new RequestManagerRetriever(requestManagerFactory, experiments);
+
 
     return new Glide(
         context,

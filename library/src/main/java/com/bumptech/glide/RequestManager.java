@@ -462,7 +462,7 @@ public class RequestManager
   @CheckResult
   @Override
   public RequestBuilder<Drawable> load(@Nullable String string) {
-    return asDrawable().load(string);
+    return asDrawable().load(string);//asDrawable(Drawable.class)
   }
 
   /**
