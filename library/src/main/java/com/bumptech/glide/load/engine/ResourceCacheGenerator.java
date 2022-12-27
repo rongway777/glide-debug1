@@ -1,5 +1,6 @@
 package com.bumptech.glide.load.engine;
 
+import android.util.Log;
 import androidx.annotation.NonNull;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.Key;
@@ -42,6 +43,7 @@ class ResourceCacheGenerator implements DataFetcherGenerator, DataFetcher.DataCa
   @SuppressWarnings("PMD.CollapsibleIfStatements")
   @Override
   public boolean startNext() {
+    Log.i("TAG", "Line ==> debug glide, ResourceCachedGenerator.startNext()");
     GlideTrace.beginSection("ResourceCacheGenerator.startNext");
     try {
       List<Key> sourceIds = helper.getCacheKeys();

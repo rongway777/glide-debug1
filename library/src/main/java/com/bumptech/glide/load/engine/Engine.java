@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.core.util.Pools;
 import com.bumptech.glide.GlideContext;
+import com.bumptech.glide.Logger;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.Key;
@@ -184,6 +185,9 @@ public class Engine
             resourceClass,
             transcodeClass,
             options);
+
+    //model: File, Uri, String.....
+    Logger.i(Logger.CLASS_NAME_ENGINE,"load()","engineKey = " + key);
 
     EngineResource<?> memoryResource;
     synchronized (this) {
@@ -373,6 +377,7 @@ public class Engine
     // A null resource indicates that the load failed, usually due to an exception.
     if (resource != null && resource.isMemoryCacheable()) {
       activeResources.activate(key, resource);
+      Log.i(TAG, "Line ==> debug glide, onEngineJobComplete(), 添加到活动缓存, key = " + key + ", resource = " + resource);
     }
 
     jobs.removeIfCurrent(key, engineJob);

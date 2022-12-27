@@ -49,6 +49,7 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
   @SuppressWarnings({"NonAtomicOperationOnVolatileField", "NonAtomicVolatileUpdate"})
   @Override
   public boolean startNext() {
+    Log.i(TAG, "Line ==> debug glide, SourceGenerator.startNext()");
     if (dataToCache != null) {
       Object data = dataToCache;
       dataToCache = null;
@@ -81,10 +82,12 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
     boolean started = false;
     while (!started && hasNextModelLoader()) {
       loadData = helper.getLoadData().get(loadDataListIndex++);
+      Log.i(TAG, "Line ==> debug glide, sourceGenerator, while, loadData = " + loadData);
       if (loadData != null
           && (helper.getDiskCacheStrategy().isDataCacheable(loadData.fetcher.getDataSource())
               || helper.hasLoadPath(loadData.fetcher.getDataClass()))) {
         started = true;
+        Log.i(TAG, "Line ==> debug glide, sourceGenerator, success, loadData = " + loadData);
         startNextLoad(loadData);
       }
     }
@@ -98,6 +101,7 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
           @Override
           public void onDataReady(@Nullable Object data) {
             if (isCurrentRequest(toStart)) {
+              Log.i(TAG, "Line ==> debug glide, fetcher.loadData.onDataReady(), data = " + data);
               onDataReadyInternal(toStart, data);
             }
           }
@@ -201,13 +205,22 @@ class SourceGenerator implements DataFetcherGenerator, DataFetcherGenerator.Fetc
   @Synthetic
   void onDataReadyInternal(LoadData<?> loadData, Object data) {
     DiskCacheStrategy diskCacheStrategy = helper.getDiskCacheStrategy();
+    Log.i(TAG, "Line ==> debug glide, onDataReadyInternal(), diskCacheStrategy = " + diskCacheStrategy);
     if (data != null && diskCacheStrategy.isDataCacheable(loadData.fetcher.getDataSource())) {
+      Log.i(TAG, "Line ==> debug glide, onDataReadyInternal(), data is cacheable, data = " + data);
       dataToCache = data;
       // We might be being called back on someone else's thread. Before doing anything, we should
       // reschedule to get back onto Glide's thread. Then once we're back on Glide's thread, we'll
       // get called again and we can write the retrieved data to cache.
       cb.reschedule();
     } else {
+      Log.i(TAG, "Line ==> debug glide, onDataReadyInternal(), data is not cacheable, "
+          + "loadData.sourceKey = " + loadData.sourceKey +
+          ", data = " + data +
+          ", loadData.fetcher = " + loadData.fetcher +
+          ", loadData.fetcher.DataSource = " + loadData.fetcher.getDataSource() +
+          ", originalKey = " + originalKey);
+
       cb.onDataFetcherReady(
           loadData.sourceKey,
           data,

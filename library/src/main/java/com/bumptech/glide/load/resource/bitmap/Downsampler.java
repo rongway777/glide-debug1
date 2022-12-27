@@ -427,6 +427,9 @@ public final class Downsampler {
     }
 
     Bitmap downsampled = decodeStream(imageReader, options, callbacks, bitmapPool);
+
+    Log.i(TAG, "Line ==> debug glide, downsampled = " + downsampled);
+
     callbacks.onDecodeComplete(bitmapPool, downsampled);
 
     if (Log.isLoggable(TAG, Log.VERBOSE)) {
@@ -485,8 +488,7 @@ public final class Downsampler {
       return;
     }
 
-    Log.i(TAG, "Line ==> calculateScaling()");
-
+    Log.i(TAG, "Line ==> debug glide, calculateScaling(), downsampleStrategy = " + downsampleStrategy);
 
     /**
      * 图片原始宽高

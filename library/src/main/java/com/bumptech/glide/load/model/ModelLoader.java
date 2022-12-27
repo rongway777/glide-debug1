@@ -58,6 +58,15 @@ public interface ModelLoader<Model, Data> {
       this.alternateKeys = Preconditions.checkNotNull(alternateKeys);
       this.fetcher = Preconditions.checkNotNull(fetcher);
     }
+
+    @Override
+    public String toString() {
+      return "LoadData{" +
+          "sourceKey=" + sourceKey +
+          ", alternateKeys=" + alternateKeys +
+          ", fetcher=" + fetcher +
+          '}';
+    }
   }
 
   /**

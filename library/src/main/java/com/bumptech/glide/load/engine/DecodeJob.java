@@ -1,5 +1,6 @@
 package com.bumptech.glide.load.engine;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -280,6 +281,7 @@ class DecodeJob<R>
         runGenerators();
         break;
       case DECODE_DATA:
+        Log.i(TAG, "Line ==> debug glide, runWrapped, reason = DECODE_DATA");
         decodeFromRetrievedData();
         break;
       default:
@@ -349,6 +351,12 @@ class DecodeJob<R>
   }
 
   private Stage getNextStage(Stage current) {
+
+    Log.i(TAG, "Line ==> debug glide, current = " + current +
+        ",decodeCachedResource = " + diskCacheStrategy.decodeCachedResource() +
+        ", decodeCachedData = " + diskCacheStrategy.decodeCachedData());
+
+
     switch (current) {
       case INITIALIZE:
         return diskCacheStrategy.decodeCachedResource()
@@ -384,18 +392,25 @@ class DecodeJob<R>
   @Override
   public void onDataFetcherReady(
       Key sourceKey, Object data, DataFetcher<?> fetcher, DataSource dataSource, Key attemptedKey) {
-    this.currentSourceKey = sourceKey;
+    this.currentSourceKey = sourceKey;/* sourceKey = ObjectKey{object=file:///storage/emulated/0/Pictures/headimg/boy-5.png} */
     this.currentData = data;
     this.currentFetcher = fetcher;
     this.currentDataSource = dataSource;
     this.currentAttemptingKey = attemptedKey;
     this.isLoadingFromAlternateCacheKey = sourceKey != decodeHelper.getCacheKeys().get(0);
 
+    Log.i(TAG, "Line ==> debug glide, DecodeJob.onDataFetcherReady(), currentSourceKey = " + currentSourceKey + ", data = " +
+        data + ", fetcher = " + fetcher + ", currentDataSource = " + dataSource + ", attemptKey = " + currentAttemptingKey + ", "
+        + "");
+    
+    
     if (Thread.currentThread() != currentThread) {
+      Log.i(TAG, "Line ==> debug glide, reschedule ==> RunReason.DECODE_DATA");
       reschedule(RunReason.DECODE_DATA);
     } else {
       GlideTrace.beginSection("DecodeJob.decodeFromRetrievedData");
       try {
+        Log.i(TAG, "Line ==> debug glide, DecodeJob.onDataFetcherReady(), call decodeFromRetrievedData()");
         decodeFromRetrievedData();
       } finally {
         GlideTrace.endSection();
@@ -432,6 +447,7 @@ class DecodeJob<R>
     Resource<R> resource = null;
     try {
       resource = decodeFromData(currentFetcher, currentData, currentDataSource);
+      Log.i(TAG, "Line ==> debug glide, decodeFromRetrievedData(), decodedResource = " + resource);
     } catch (GlideException e) {
       e.setLoggingDetails(currentAttemptingKey, currentDataSource);
       throwables.add(e);
@@ -446,6 +462,10 @@ class DecodeJob<R>
   private void notifyEncodeAndRelease(
       Resource<R> resource, DataSource dataSource, boolean isLoadedFromAlternateCacheKey) {
     GlideTrace.beginSection("DecodeJob.notifyEncodeAndRelease");
+
+    Log.i(TAG, "Line ==> debug glide, notifyEncodeAndRelease(), resource = " +
+        resource + ", dataSource = " + dataSource);
+
     try {
       if (resource instanceof Initializable) {
         ((Initializable) resource).initialize();
@@ -481,18 +501,18 @@ class DecodeJob<R>
 
   private <Data> Resource<R> decodeFromData(
       DataFetcher<?> fetcher, Data data, DataSource dataSource) throws GlideException {
+    Log.i(TAG, "Line ==> debug glide, DecodeJob.decodeFromData(), data = " + data + ", dataSource = " + dataSource);
     try {
       if (data == null) {
         return null;
       }
-      long startTime = LogTime.getLogTime();
+
       Resource<R> result = decodeFromFetcher(data, dataSource);
-      if (Log.isLoggable(TAG, Log.VERBOSE)) {
-        logWithTimeAndKey("Decoded result " + result, startTime);
-      }
+      Log.i(TAG, "Line ==> debug glide, DecodeJob.decodeFromData(), result = " + result);
       return result;
     } finally {
       fetcher.cleanup();
+      Log.i(TAG, "Line ==> debug glide, DecodeJob.decodeFromData(), clean fetcher");
     }
   }
 
@@ -500,6 +520,7 @@ class DecodeJob<R>
   private <Data> Resource<R> decodeFromFetcher(Data data, DataSource dataSource)
       throws GlideException {
     LoadPath<Data, ?, R> path = decodeHelper.getLoadPath((Class<Data>) data.getClass());
+    Log.i(TAG, "Line ==> debug glide, decodeFromFetcher(), loadPath = " + path);
     return runLoadPath(data, dataSource, path);
   }
 
@@ -534,6 +555,9 @@ class DecodeJob<R>
       throws GlideException {
     Options options = getOptionsWithHardwareConfig(dataSource);
     DataRewinder<Data> rewinder = glideContext.getRegistry().getRewinder(data);
+
+    Log.i(TAG, "Line ==> debug glide, DecodeJob runLoadPath(), ops = " + options + ", rewinder = " + rewinder);
+
     try {
       // ResourceType in DecodeCallback below is required for compilation to work with gradle.
       return path.load(
@@ -543,9 +567,9 @@ class DecodeJob<R>
     }
   }
 
-  private void logWithTimeAndKey(String message, long startTime) {
-    logWithTimeAndKey(message, startTime, null /*extraArgs*/);
-  }
+/*  private void logWithTimeAndKey(String message, long startTime) {
+    logWithTimeAndKey(message, startTime, null *//*extraArgs*//*);
+  }*/
 
   private void logWithTimeAndKey(String message, long startTime, String extraArgs) {
     Log.v(

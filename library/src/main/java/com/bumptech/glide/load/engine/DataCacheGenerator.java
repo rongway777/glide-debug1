@@ -1,5 +1,6 @@
 package com.bumptech.glide.load.engine;
 
+import android.util.Log;
 import androidx.annotation.NonNull;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.Key;
@@ -44,6 +45,7 @@ class DataCacheGenerator implements DataFetcherGenerator, DataFetcher.DataCallba
 
   @Override
   public boolean startNext() {
+    Log.i("TAG", "Line ==> debug glide, DataCachedGenerator.startNext()");
     GlideTrace.beginSection("DataCacheGenerator.startNext");
     try {
       while (modelLoaders == null || !hasNextModelLoader()) {

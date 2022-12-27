@@ -1,6 +1,7 @@
 package com.bumptech.glide.load.resource.bitmap;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import java.security.MessageDigest;
@@ -19,6 +20,11 @@ public class CenterCrop extends BitmapTransformation {
   @Override
   protected Bitmap transform(
       @NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+
+    Log.i("TAG", "Line ==> debug glide, toTransform = " + toTransform +
+        ", width = " + toTransform.getWidth() + ", height = " + toTransform.getHeight() +
+        ", targetWidth = " + outWidth + ", targetHeight = " + outHeight);
+
     return TransformationUtils.centerCrop(pool, toTransform, outWidth, outHeight);
   }
 

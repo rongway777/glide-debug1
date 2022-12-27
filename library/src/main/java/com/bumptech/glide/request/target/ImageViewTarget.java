@@ -2,6 +2,7 @@ package com.bumptech.glide.request.target;
 
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -100,6 +101,7 @@ public abstract class ImageViewTarget<Z> extends ViewTarget<ImageView, Z>
   @Override
   public void onResourceReady(@NonNull Z resource, @Nullable Transition<? super Z> transition) {
     if (transition == null || !transition.transition(resource, this)) {
+      Log.i("TAG", "Line ==> debug glide, ImageviewTarget.onResourceReady(), resource = " + resource);
       setResourceInternal(resource);
     } else {
       maybeUpdateAnimatable(resource);

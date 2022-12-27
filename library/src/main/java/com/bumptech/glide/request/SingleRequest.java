@@ -541,6 +541,11 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
   @Override
   public void onResourceReady(
       Resource<?> resource, DataSource dataSource, boolean isLoadedFromAlternateCacheKey) {
+    
+    Log.i("TAG", "Line ==> debug glide, SingleRequest, onResourceReady(), resource = "
+        + resource + ", dataSource = " + dataSource);
+
+    
     stateVerifier.throwIfRecycled();
     Resource<?> toRelease = null;
     try {
@@ -617,14 +622,17 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
   private void onResourceReady(
       Resource<R> resource, R result, DataSource dataSource, boolean isAlternateCacheKey) {
     // We must call isFirstReadyResource before setting status.
+/*    Log.i(TAG, "Line ==> debug glide, singleRequest, onResourceReady(), resource = "
+        + resource + ", =====================> result = " + resource + ", dataSource = " + dataSource);*/
+
     boolean isFirstResource = isFirstReadyResource();
     status = Status.COMPLETE;
     this.resource = resource;
 
-    if (glideContext.getLogLevel() <= Log.DEBUG) {
+    if (true) {
       Log.d(
           GLIDE_TAG,
-          "Finished loading "
+          "Line ==> debug glide, onResourceReady(), "
               + result.getClass().getSimpleName()
               + " from "
               + dataSource
@@ -656,6 +664,7 @@ public final class SingleRequest<R> implements Request, SizeReadyCallback, Resou
 
       if (!anyListenerHandledUpdatingTarget) {
         Transition<? super R> animation = animationFactory.build(dataSource, isFirstResource);
+        Log.i(TAG, "Line ==> debug glide, call target.onResourceReady(), result = " + result);
         target.onResourceReady(result, animation);
       }
     } finally {

@@ -2,6 +2,8 @@ package pajkkx.kang.test
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -13,8 +15,11 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.request.target.ViewTarget
 import java.io.File
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,22 +43,33 @@ class MainActivity : AppCompatActivity() {
         img = findViewById(R.id.imageView)
         Log.i(TAG, "onCreate: ")
 
+        //Glide.get(this).clearDiskCache();
+
         Log.i(TAG, "onCreate: IMG1 = $GOOGLE_PNG_IMG_6")
-        /*Glide.with(this)
-                .load(GOOGLE_PNG_IMG_5)
-                .into(img!!)*/
 
+        Glide.with(this)
+                .load(CHA_HUA_HEAD_IMG_1)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(img!!)
 
-
-        val requestManager: RequestManager = Glide.with(this)
+        /*val requestManager: RequestManager = Glide.with(this)
 
         val requestBuilder: RequestBuilder<Drawable> = requestManager.load(GOOGLE_PNG_IMG_4)
-
 
         val viewTarget: ViewTarget<ImageView,Drawable> = requestBuilder.into(img!!)
 
         requestManager.lifecycle.addListener(MyLifecycleListener())
-        img!!.visibility = View.INVISIBLE
+        img!!.visibility = View.INVISIBLE*/
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        thread {
+            Glide.get(this).clearDiskCache()
+            Log.i(TAG, "Line ==> debug glide, clear diskCache")
+        }
     }
 
 

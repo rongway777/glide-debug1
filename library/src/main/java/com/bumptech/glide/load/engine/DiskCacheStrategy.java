@@ -1,5 +1,6 @@
 package com.bumptech.glide.load.engine;
 
+import androidx.annotation.NonNull;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.EncodeStrategy;
 
@@ -57,6 +58,12 @@ public abstract class DiskCacheStrategy {
         @Override
         public boolean decodeCachedData() {
           return false;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+          return "DiskCacheStrategy.NONE";
         }
       };
 
@@ -140,6 +147,12 @@ public abstract class DiskCacheStrategy {
         @Override
         public boolean decodeCachedData() {
           return true;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+          return "DiskCacheStrategy.AUTOMATIC";
         }
       };
 

@@ -112,9 +112,7 @@ public class DiskLruCacheWrapper implements DiskCache {
     String safeKey = safeKeyGenerator.getSafeKey(key);
     writeLocker.acquire(safeKey);
     try {
-      if (Log.isLoggable(TAG, Log.VERBOSE)) {
-        Log.v(TAG, "Put: Obtained: " + safeKey + " for for Key: " + key);
-      }
+      Log.i(TAG, "Line ==> debug glide, Put: Obtained: " + safeKey + " for for Key: " + key);
       try {
         // We assume we only need to put once, so if data was written while we were trying to get
         // the lock, we can simply abort.

@@ -30,7 +30,9 @@ public class RequestOptions extends BaseRequestOptions<RequestOptions> {
   @Nullable private static RequestOptions fitCenterOptions;
   @Nullable private static RequestOptions centerInsideOptions;
   @Nullable private static RequestOptions centerCropOptions;
+
   @Nullable private static RequestOptions circleCropOptions;
+
   @Nullable private static RequestOptions noTransformOptions;
   @Nullable private static RequestOptions noAnimationOptions;
 

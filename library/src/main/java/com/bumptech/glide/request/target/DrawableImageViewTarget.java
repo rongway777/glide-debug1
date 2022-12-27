@@ -1,6 +1,9 @@
 package com.bumptech.glide.request.target;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
 
@@ -24,5 +27,15 @@ public class DrawableImageViewTarget extends ImageViewTarget<Drawable> {
   @Override
   protected void setResource(@Nullable Drawable resource) {
     view.setImageDrawable(resource);
+    Log.i("TAG", "Line ==> debug glide, call BitmapImageViewTarget.setResource(), drawable = "
+        + resource + ", bitmap = ");
+
+    if(resource instanceof BitmapDrawable){
+      BitmapDrawable drawable = (BitmapDrawable) resource;
+      Bitmap bitmap = drawable.getBitmap();
+      Log.i("TAG", "Line ==> debug glide, call BitmapImageViewTarget.setResource(), drawable = "
+          + resource + ", bitmap = " + bitmap);
+    }
+
   }
 }

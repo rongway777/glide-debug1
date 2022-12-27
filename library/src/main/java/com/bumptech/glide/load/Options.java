@@ -56,6 +56,10 @@ public final class Options implements Key {
     return "Options{" + "values=" + values + '}';
   }
 
+  public int size(){
+    return values != null ? values.size() : 0;
+  }
+
   @SuppressWarnings("unchecked")
   private static <T> void updateDiskCacheKey(
       @NonNull Option<T> option, @NonNull Object value, @NonNull MessageDigest md) {

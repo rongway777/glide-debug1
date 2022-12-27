@@ -1,5 +1,6 @@
 package com.bumptech.glide.load.engine;
 
+import android.util.Log;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -156,6 +157,8 @@ class EngineJob<R> implements DecodeJob.Callback<R>, Poolable {
       // This is overly broad, some Glide code is actually called here, but it's much
       // simpler to encapsulate here than to do so at the actual call point in the
       // Request implementation.
+      Log.i("TAG", "Line ==> debug glide, EngineJob callCallbackOnResourceReady(), onResourceReady(), resource = "
+          + engineResource + ", dataSource = " + dataSource);
       cb.onResourceReady(engineResource, dataSource, isLoadedFromAlternateCacheKey);
     } catch (Throwable t) {
       throw new CallbackException(t);
@@ -244,6 +247,8 @@ class EngineJob<R> implements DecodeJob.Callback<R>, Poolable {
         throw new IllegalStateException("Already have resource");
       }
       engineResource = engineResourceFactory.build(resource, isCacheable, key, resourceListener);
+      Log.i("TAG", "Line ==> debug glide, notifyCallbacksOfResult(), init engineResource, resource = "
+          + resource + ", isCacheable = " + isCacheable + ", key = " + key);
       // Hold on to resource for duration of our callbacks below so we don't recycle it in the
       // middle of notifying if it synchronously released by one of the callbacks. Acquire it under
       // a lock here so that any newly added callback that executes before the next locked section
@@ -317,6 +322,9 @@ class EngineJob<R> implements DecodeJob.Callback<R>, Poolable {
   public void onResourceReady(
       Resource<R> resource, DataSource dataSource, boolean isLoadedFromAlternateCacheKey) {
     synchronized (this) {
+      Log.i("TAG", "Line ==> debug glide, engineJob onResourceReady(), resource = " +
+          resource + ", dataSource = " + dataSource);
+
       this.resource = resource;
       this.dataSource = dataSource;
       this.isLoadedFromAlternateCacheKey = isLoadedFromAlternateCacheKey;
@@ -425,6 +433,7 @@ class EngineJob<R> implements DecodeJob.Callback<R>, Poolable {
           if (cbs.contains(cb)) {
             // Acquire for this particular callback.
             engineResource.acquire();
+            Log.i("TAG", "Line ==> debug glide, EngineJob CallResourceReady, ==> engineResource.acquire()");
             callCallbackOnResourceReady(cb);
             removeCallback(cb);
           }

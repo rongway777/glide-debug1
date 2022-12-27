@@ -89,10 +89,10 @@ class EngineKey implements Key {
         + signature
         + ", hashCode="
         + hashCode
-        + ", transformations="
-        + transformations
-        + ", options="
-        + options
+        + ", transformations.size="
+        + transformations.size()
+        + ", options.size="
+        + options.size()
         + '}';
   }
 
