@@ -17,6 +17,7 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.ViewTarget
 import java.io.File
 import kotlin.concurrent.thread
@@ -35,12 +36,14 @@ class MainActivity : AppCompatActivity() {
     val GOOGLE_PNG_IMG_6 = sdcard + "Pictures/png/rhS7Qoe-png-wallpapers.png"
 
     var img: ImageView? = null
+    var img2: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         requestReadExternalPermission()
         img = findViewById(R.id.imageView)
+        img2 = findViewById(R.id.imageView2)
         Log.i(TAG, "onCreate: ")
 
         //Glide.get(this).clearDiskCache();
@@ -52,14 +55,22 @@ class MainActivity : AppCompatActivity() {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(img!!)
 
-        /*val requestManager: RequestManager = Glide.with(this)
+        //Thread.sleep(500)
 
-        val requestBuilder: RequestBuilder<Drawable> = requestManager.load(GOOGLE_PNG_IMG_4)
+        //Glide.with(this)
+        //        .load(CHA_HUA_HEAD_IMG_1)
+        //        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        //        .into(img2!!)
 
-        val viewTarget: ViewTarget<ImageView,Drawable> = requestBuilder.into(img!!)
 
-        requestManager.lifecycle.addListener(MyLifecycleListener())
-        img!!.visibility = View.INVISIBLE*/
+
+        /*val requestManager = Glide.with(this)
+        var requestBuilder = requestManager.asDrawable();
+        requestBuilder = requestBuilder.load(CHA_HUA_HEAD_IMG_1)
+        requestBuilder = requestBuilder.diskCacheStrategy(DiskCacheStrategy.NONE)
+        requestBuilder.into(img!!)*/
+
+
     }
 
 
@@ -71,6 +82,8 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "Line ==> debug glide, clear diskCache")
         }
     }
+
+
 
 
 

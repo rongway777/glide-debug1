@@ -299,11 +299,18 @@ public class Engine
   @Nullable
   private EngineResource<?> loadFromMemory(
       EngineKey key, boolean isMemoryCacheable, long startTime) {
+
+    Logger.i(Logger.CLASS_NAME_ENGINE,"loadFromMemory()","engineKey = " + key + ", isMemoryCacheable = " + isMemoryCacheable);
+
     if (!isMemoryCacheable) {
       return null;
     }
 
     EngineResource<?> active = loadFromActiveResources(key);
+
+    Logger.i(Logger.CLASS_NAME_ENGINE,"loadFromMemory()","active = " + active);
+
+
     if (active != null) {
       if (VERBOSE_IS_LOGGABLE) {
         logWithTimeAndKey("Loaded resource from active resources", startTime, key);
@@ -312,6 +319,9 @@ public class Engine
     }
 
     EngineResource<?> cached = loadFromCache(key);
+
+    Logger.i(Logger.CLASS_NAME_ENGINE,"loadFromMemory()","cached = " + cached);
+
     if (cached != null) {
       if (VERBOSE_IS_LOGGABLE) {
         logWithTimeAndKey("Loaded resource from cache", startTime, key);
@@ -377,7 +387,7 @@ public class Engine
     // A null resource indicates that the load failed, usually due to an exception.
     if (resource != null && resource.isMemoryCacheable()) {
       activeResources.activate(key, resource);
-      Log.i(TAG, "Line ==> debug glide, onEngineJobComplete(), 添加到活动缓存, key = " + key + ", resource = " + resource);
+      Logger.i(Logger.CLASS_NAME_ENGINE,"onEngineJobComplete()","key = " + key + ", resource = " + resource);
     }
 
     jobs.removeIfCurrent(key, engineJob);
