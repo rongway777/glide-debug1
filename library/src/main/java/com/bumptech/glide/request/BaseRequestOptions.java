@@ -10,6 +10,7 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.bumptech.glide.Logger;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.Key;
@@ -226,6 +227,8 @@ public abstract class BaseRequestOptions<T extends BaseRequestOptions<T>> implem
     this.diskCacheStrategy = Preconditions.checkNotNull(strategy);
     fields |= DISK_CACHE_STRATEGY;
 
+    Logger.i("BaseRequestOption","diskCacheStrategy()", "strategy = " + strategy);
+
     return selfOrThrowIfLocked();
   }
 
@@ -293,6 +296,8 @@ public abstract class BaseRequestOptions<T extends BaseRequestOptions<T>> implem
 
     placeholderDrawable = null;
     fields &= ~PLACEHOLDER;
+
+    Logger.i("BaseRequestOption","placeholder(id)", "placeholderId = " + resourceId + ", placeholderDrawable = null");
 
     return selfOrThrowIfLocked();
   }
@@ -395,6 +400,7 @@ public abstract class BaseRequestOptions<T extends BaseRequestOptions<T>> implem
     if (isAutoCloneEnabled) {
       return clone().error(resourceId);
     }
+    Logger.i("BaseRequestOption","error()", "errorId = " + resourceId);
     this.errorId = resourceId;
     fields |= ERROR_ID;
 
@@ -465,6 +471,8 @@ public abstract class BaseRequestOptions<T extends BaseRequestOptions<T>> implem
     if (isAutoCloneEnabled) {
       return clone().override(width, height);
     }
+
+    Logger.i("BaseRequestOption","override(width,height)", "width * height = " + width + "*" + height);
 
     this.overrideWidth = width;
     this.overrideHeight = height;
@@ -551,6 +559,8 @@ public abstract class BaseRequestOptions<T extends BaseRequestOptions<T>> implem
     if (isAutoCloneEnabled) {
       return clone().set(option, value);
     }
+
+    Logger.i("BaseRequestOption","set()", "option = " + option + ", value = " + value);
 
     Preconditions.checkNotNull(option);
     Preconditions.checkNotNull(value);
@@ -969,16 +979,31 @@ public abstract class BaseRequestOptions<T extends BaseRequestOptions<T>> implem
       return clone().transform(transformation, isRequired);
     }
 
+    Logger.i("BaseRequestOption","transform()", "start register transformation, isRequired = " + isRequired);
+
     DrawableTransformation drawableTransformation =
         new DrawableTransformation(transformation, isRequired);
-    transform(Bitmap.class, transformation, isRequired);
-    transform(Drawable.class, drawableTransformation, isRequired);
+
+    transform(Bitmap.class, transformation, isRequired); //BitmapTransformation ==> Bitmap转换，自定义传入的
+    Logger.i("BaseRequestOption","transform()", "register <Bitmap.class> trans = " + transformation);
+
+
+    transform(Drawable.class, drawableTransformation, isRequired); //DrawableTransformation ==> 需要传参BitmapTransformation
+    Logger.i("BaseRequestOption","transform()", "register <Drawable.class> trans = " + drawableTransformation);
+
     // TODO: remove BitmapDrawable decoder and this transformation.
     // Registering as BitmapDrawable is simply an optimization to avoid some iteration and
     // isAssignableFrom checks when obtaining the transformation later on. It can be removed without
     // affecting the functionality.
+
     transform(BitmapDrawable.class, drawableTransformation.asBitmapDrawable(), isRequired);
-    transform(GifDrawable.class, new GifDrawableTransformation(transformation), isRequired);
+    Logger.i("BaseRequestOption","transform()", "register <BitmapDrawable.class> trans = " + drawableTransformation);
+
+
+    GifDrawableTransformation gifDrawableTransformation = new GifDrawableTransformation(transformation);
+    transform(GifDrawable.class, gifDrawableTransformation, isRequired);
+    Logger.i("BaseRequestOption","transform()", "register <GifDrawable.class> trans = " + gifDrawableTransformation);
+
     return selfOrThrowIfLocked();
   }
 

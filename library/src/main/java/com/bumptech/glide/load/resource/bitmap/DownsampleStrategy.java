@@ -1,6 +1,7 @@
 package com.bumptech.glide.load.resource.bitmap;
 
 import android.os.Build;
+import androidx.annotation.NonNull;
 import com.bumptech.glide.load.Option;
 import com.bumptech.glide.util.Synthetic;
 
@@ -154,6 +155,13 @@ public abstract class DownsampleStrategy {
             Math.max(sourceHeight / requestedHeight, sourceWidth / requestedWidth);
         return maxIntegerFactor == 0 ? 1f : 1f / Integer.highestOneBit(maxIntegerFactor);
       }
+
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+      return "DownsampleStrategy$FitCenter";
     }
 
     @Override
@@ -188,6 +196,12 @@ public abstract class DownsampleStrategy {
         int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {
       return SampleSizeRounding.QUALITY;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+      return "DownsampleStrategy$CenterOutside";
+    }
   }
 
   private static class AtLeast extends DownsampleStrategy {
@@ -206,6 +220,12 @@ public abstract class DownsampleStrategy {
     public SampleSizeRounding getSampleSizeRounding(
         int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {
       return SampleSizeRounding.QUALITY;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+      return "DownsampleStrategy$AtLeast";
     }
   }
 
@@ -234,6 +254,12 @@ public abstract class DownsampleStrategy {
         int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {
       return SampleSizeRounding.MEMORY;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+      return "DownsampleStrategy$AtMost";
+    }
   }
 
   private static class None extends DownsampleStrategy {
@@ -251,6 +277,12 @@ public abstract class DownsampleStrategy {
     public SampleSizeRounding getSampleSizeRounding(
         int sourceWidth, int sourceHeight, int requestedWidth, int requestedHeight) {
       return SampleSizeRounding.QUALITY;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+      return "DownsampleStrategy$None";
     }
   }
 
@@ -275,6 +307,12 @@ public abstract class DownsampleStrategy {
           ? SampleSizeRounding.QUALITY
           : FIT_CENTER.getSampleSizeRounding(
               sourceWidth, sourceHeight, requestedWidth, requestedHeight);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+      return "DownsampleStrategy$CenterInside";
     }
   }
 

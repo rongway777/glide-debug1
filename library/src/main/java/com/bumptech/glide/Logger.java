@@ -12,6 +12,10 @@ public class Logger {
 
 
   public static void i(String className, String functionName, String message){
-    Log.i(TAG, "[" + className + "] [" + functionName + "] " + message);
+    Log.i(TAG, "[" + className + "][" + functionName + "] " + message);
+  }
+
+  public static void line(){
+    Log.i(TAG, "-------------------------------------------------------------> ");
   }
 }

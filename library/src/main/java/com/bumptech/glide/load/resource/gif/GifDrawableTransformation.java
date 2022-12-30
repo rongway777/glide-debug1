@@ -68,4 +68,9 @@ public class GifDrawableTransformation implements Transformation<GifDrawable> {
   public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
     wrapped.updateDiskCacheKey(messageDigest);
   }
+
+  @Override
+  public String toString() {
+    return "GifDrawableTransformation";
+  }
 }

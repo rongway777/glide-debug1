@@ -94,4 +94,9 @@ public class DrawableTransformation implements Transformation<Drawable> {
   public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
     wrapped.updateDiskCacheKey(messageDigest);
   }
+
+  @Override
+  public String toString() {
+    return "DrawableTransformation";
+  }
 }

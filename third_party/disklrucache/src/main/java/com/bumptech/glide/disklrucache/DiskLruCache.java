@@ -208,6 +208,7 @@ public final class DiskLruCache implements Closeable {
     }
 
     // If a bkp file exists, use it instead.
+    //OK
     File backupFile = new File(directory, JOURNAL_FILE_BACKUP);
     if (backupFile.exists()) {
       File journalFile = new File(directory, JOURNAL_FILE);
@@ -290,32 +291,41 @@ public final class DiskLruCache implements Closeable {
       throw new IOException("unexpected journal line: " + line);
     }
 
-    int keyBegin = firstSpace + 1;
-    int secondSpace = line.indexOf(' ', keyBegin);
+    int keyBegin = firstSpace + 1; //key begin
+    int secondSpace = line.indexOf(' ', keyBegin); //只有CLEAN不为 -1
     final String key;
     if (secondSpace == -1) {
-      key = line.substring(keyBegin);
+      key = line.substring(keyBegin); //getKey
+      //REMOVE
       if (firstSpace == REMOVE.length() && line.startsWith(REMOVE)) {
-        lruEntries.remove(key);
+        lruEntries.remove(key); //update memory?
         return;
       }
+      //READ || DIRTY
     } else {
-      key = line.substring(keyBegin, secondSpace);
+      key = line.substring(keyBegin, secondSpace); //getKey
     }
 
+
+    //KEY has init
     Entry entry = lruEntries.get(key);
     if (entry == null) {
       entry = new Entry(key);
       lruEntries.put(key, entry);
     }
 
+    //CLEAN
     if (secondSpace != -1 && firstSpace == CLEAN.length() && line.startsWith(CLEAN)) {
       String[] parts = line.substring(secondSpace + 1).split(" ");
       entry.readable = true;
       entry.currentEditor = null;
-      entry.setLengths(parts);
+      entry.setLengths(parts);//初始化CLEAN
+
+    //DIRRT
     } else if (secondSpace == -1 && firstSpace == DIRTY.length() && line.startsWith(DIRTY)) {
       entry.currentEditor = new Editor(entry);
+
+      //READ
     } else if (secondSpace == -1 && firstSpace == READ.length() && line.startsWith(READ)) {
       // This work was already done by calling lruEntries.get().
     } else {

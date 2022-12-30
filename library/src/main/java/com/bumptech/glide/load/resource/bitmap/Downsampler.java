@@ -12,6 +12,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
+import com.bumptech.glide.Logger;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.ImageHeaderParser;
 import com.bumptech.glide.load.ImageHeaderParser.ImageType;
@@ -428,7 +429,7 @@ public final class Downsampler {
 
     Bitmap downsampled = decodeStream(imageReader, options, callbacks, bitmapPool);
 
-    Log.i(TAG, "Line ==> debug glide, downsampled = " + downsampled);
+    Logger.i("Downsampler","decodeFromWrappedStreams()","downsampled = " + downsampled);
 
     callbacks.onDecodeComplete(bitmapPool, downsampled);
 

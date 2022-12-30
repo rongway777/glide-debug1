@@ -300,7 +300,7 @@ public class Engine
   private EngineResource<?> loadFromMemory(
       EngineKey key, boolean isMemoryCacheable, long startTime) {
 
-    Logger.i(Logger.CLASS_NAME_ENGINE,"loadFromMemory()","engineKey = " + key + ", isMemoryCacheable = " + isMemoryCacheable);
+    Logger.i(Logger.CLASS_NAME_ENGINE,"loadFromMemory()","isMemoryCacheable = " + isMemoryCacheable);
 
     if (!isMemoryCacheable) {
       return null;

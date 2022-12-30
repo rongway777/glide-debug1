@@ -140,7 +140,7 @@ public final class Option<T> {
 
   @Override
   public String toString() {
-    return "Option{" + "key='" + key + '\'' + '}';
+    return "Option{" + "key = " + key + ", defaultValue = " + defaultValue + "}";
   }
 
   /**
